@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌐 Gerador de Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app">
+
+  <!-- TELA DE FORMULÁRIO -->
+  <div class="tela" id="tela-form">
+
+    <header class="header">
+      <div class="logo">🌐 <span>SiteGen <span class="badge-ai">AI</span></span></div>
+      <p class="header-sub">Crie seu portfólio profissional com IA</p>
+    </header>
+
+    <div class="form-layout">
+
+      <!-- Formulário -->
+      <div class="form-card">
+        <h2 class="form-titulo">✏️ Suas Informações</h2>
+
+        <div class="form-row">
+          <div class="campo">
+            <label>Nome completo</label>
+            <input type="text" id="f-nome" placeholder="Ex: Rafael Bonfim"/>
+          </div>
+          <div class="campo">
+            <label>Profissão / Título</label>
+            <input type="text" id="f-profissao" placeholder="Ex: Desenvolvedor Web"/>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Bio / Sobre você</label>
+          <textarea id="f-bio" rows="3" placeholder="Escreva algo sobre você…"></textarea>
+          <button class="btn-ia-bio" id="btn-ia-bio" onclick="gerarBioIA()">
+            ✨ Gerar Bio com IA
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div class="campo">
+            <label>🐙 GitHub (usuário)</label>
+            <input type="text" id="f-github" placeholder="seu-usuario"/>
+          </div>
+          <div class="campo">
+            <label>📸 Instagram (usuário)</label>
+            <input type="text" id="f-instagram" placeholder="@seuinstagram"/>
+          </div>
+        </div>
+        <div class="campo">
+          <label>💼 LinkedIn (usuário)</label>
+          <input type="text" id="f-linkedin" placeholder="seu-linkedin"/>
+        </div>
+
+        <!-- Avatar -->
+        <div class="campo">
+          <label>Avatar</label>
+          <div class="avatar-grid" id="avatar-grid">
+            <button class="avatar-op selected" onclick="selAvatar(this,'👨‍💻')">👨‍💻</button>
+            <button class="avatar-op" onclick="selAvatar(this,'👩‍💻')">👩‍💻</button>
+            <button class="avatar-op" onclick="selAvatar(this,'🧑‍🎨')">🧑‍🎨</button>
+            <button class="avatar-op" onclick="selAvatar(this,'🧑‍🚀')">🧑‍🚀</button>
+            <button class="avatar-op" onclick="selAvatar(this,'🧙')">🧙</button>
+            <button class="avatar-op" onclick="selAvatar(this,'🦸')">🦸</button>
+            <button class="avatar-op" onclick="selAvatar(this,'🤖')">🤖</button>
+            <button class="avatar-op" onclick="selAvatar(this,'👾')">👾</button>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="campo">
+          <label>Habilidades</label>
+          <div class="skill-input-row">
+            <input type="text" id="skill-input" placeholder="Ex: React, Python, Design…" onkeypress="if(event.key==='Enter')addSkill()"/>
+            <button class="btn-add-skill" onclick="addSkill()">+</button>
+          </div>
+          <div id="skills-lista" class="skills-lista"></div>
+        </div>
+
+        <!-- Projetos -->
+        <div class="campo">
+          <label>Projetos</label>
+          <div class="proj-input-row">
+            <input type="text" id="proj-nome" placeholder="Nome do projeto"/>
+            <input type="text" id="proj-desc" placeholder="Descrição breve"/>
+            <button class="btn-add-proj" onclick="addProjeto()">+</button>
+          </div>
+          <div id="projetos-lista" class="projetos-lista"></div>
+        </div>
+
+      </div>
+
+      <!-- Temas + Gerar -->
+      <div class="config-card">
+        <h3 class="cfg-titulo">🎨 Tema Visual</h3>
+        <div class="temas-grid">
+          <button class="tema-btn active" data-tema="dark-azul" onclick="selTema(this,'dark-azul')">
+            <span class="tema-preview" style="background:linear-gradient(135deg,#0d1117,#2563eb)"></span>
+            <span>Dark Azul</span>
+          </button>
+          <button class="tema-btn" data-tema="dark-roxo" onclick="selTema(this,'dark-roxo')">
+            <span class="tema-preview" style="background:linear-gradient(135deg,#0f0c29,#a855f7)"></span>
+            <span>Dark Roxo</span>
+          </button>
+          <button class="tema-btn" data-tema="neon-verde" onclick="selTema(this,'neon-verde')">
+            <span class="tema-preview" style="background:linear-gradient(135deg,#001a00,#00ff41)"></span>
+            <span>Neon Verde</span>
+          </button>
+          <button class="tema-btn" data-tema="sunset" onclick="selTema(this,'sunset')">
+            <span class="tema-preview" style="background:linear-gradient(135deg,#1a0a00,#f97316)"></span>
+            <span>Sunset</span>
+          </button>
+          <button class="tema-btn" data-tema="ocean" onclick="selTema(this,'ocean')">
+            <span class="tema-preview" style="background:linear-gradient(135deg,#001a2c,#06b6d4)"></span>
+            <span>Ocean</span>
+          </button>
+          <button class="tema-btn" data-tema="claro" onclick="selTema(this,'claro')">
+            <span class="tema-preview" style="background:linear-gradient(135deg,#f8fafc,#3b82f6)"></span>
+            <span>Claro</span>
+          </button>
+        </div>
+
+        <button class="btn-gerar-site" onclick="gerarSite()">
+          🌐 Gerar Site
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TELA DE PREVIEW -->
+  <div class="tela hidden" id="tela-preview">
+    <div class="preview-header">
+      <button class="btn-voltar" onclick="voltarForm()">← Editar</button>
+      <span class="preview-title">Preview do seu Site</span>
+      <button class="btn-exportar" onclick="exportarSite()">⬇️ Baixar HTML</button>
+    </div>
+    <div class="preview-frame" id="preview-conteudo"></div>
+  </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>

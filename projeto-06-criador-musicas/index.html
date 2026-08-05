@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎵 MusicGen AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="logo">🎵 <span>MusicGen <span class="badge-ai">AI</span></span></div>
+    <p class="header-sub">Powered by Tone.js + Google Gemini</p>
+  </header>
+
+  <main class="main-grid">
+
+    <!-- CONFIG -->
+    <section class="config-panel">
+      <div class="config-card">
+        <h3 class="config-titulo">🎸 Gênero</h3>
+        <div class="opcoes-grid" id="genero-opcoes">
+          <button class="opcao-btn active" onclick="sel('genero',this,'lofi')">☕ Lo-fi</button>
+          <button class="opcao-btn" onclick="sel('genero',this,'eletronico')">⚡ Eletrônico</button>
+          <button class="opcao-btn" onclick="sel('genero',this,'pop')">🌟 Pop</button>
+          <button class="opcao-btn" onclick="sel('genero',this,'rock')">🎸 Rock</button>
+          <button class="opcao-btn" onclick="sel('genero',this,'jazz')">🎷 Jazz</button>
+          <button class="opcao-btn" onclick="sel('genero',this,'classico')">🎻 Clássico</button>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <h3 class="config-titulo">💭 Humor</h3>
+        <div class="opcoes-grid" id="humor-opcoes">
+          <button class="opcao-btn active" onclick="sel('humor',this,'feliz')">😄 Feliz</button>
+          <button class="opcao-btn" onclick="sel('humor',this,'melancolico')">😢 Melancólico</button>
+          <button class="opcao-btn" onclick="sel('humor',this,'energico')">🔥 Enérgico</button>
+          <button class="opcao-btn" onclick="sel('humor',this,'relaxante')">🌊 Relaxante</button>
+        </div>
+      </div>
+
+      <div class="config-card">
+        <h3 class="config-titulo">⚙️ Parâmetros</h3>
+        <div class="slider-campo">
+          <label>BPM <span id="bpm-val" class="slider-val">120</span></label>
+          <input type="range" id="bpm" min="60" max="200" value="120" oninput="document.getElementById('bpm-val').textContent=this.value"/>
+        </div>
+        <div class="slider-campo">
+          <label>Oitava <span id="oitava-val" class="slider-val">4</span></label>
+          <input type="range" id="oitava" min="2" max="6" value="4" oninput="document.getElementById('oitava-val').textContent=this.value"/>
+        </div>
+      </div>
+
+      <button class="btn-gerar" id="btn-gerar" onclick="gerarMusica()">🎼 Gerar Música</button>
+    </section>
+
+    <!-- PLAYER -->
+    <section class="player-panel">
+      <div class="vinil-wrap">
+        <div class="vinil" id="vinil"><div class="vinil-centro">🎵</div></div>
+      </div>
+
+      <div class="track-info">
+        <div class="track-nome" id="titulo-musica">Configure e gere sua música →</div>
+        <div class="track-desc" id="desc-musica">Lo-fi · feliz · 120 BPM</div>
+      </div>
+
+      <div class="notas-wrapper" id="notas-wrapper" style="display:none">
+        <span class="notas-label">Sequência:</span>
+        <div class="notas-container" id="notas-geradas"></div>
+      </div>
+
+      <div class="visualizador">
+        <div class="vis-bar" id="vis1"></div><div class="vis-bar" id="vis2"></div>
+        <div class="vis-bar" id="vis3"></div><div class="vis-bar" id="vis4"></div>
+        <div class="vis-bar" id="vis5"></div><div class="vis-bar" id="vis6"></div>
+        <div class="vis-bar" id="vis7"></div><div class="vis-bar" id="vis8"></div>
+        <div class="vis-bar" id="vis9"></div><div class="vis-bar" id="vis10"></div>
+        <div class="vis-bar" id="vis11"></div><div class="vis-bar" id="vis12"></div>
+      </div>
+
+      <div class="controles">
+        <button class="btn-ctrl" id="btn-play" onclick="tocarPausar()" disabled>▶️ Tocar</button>
+        <button class="btn-ctrl" id="btn-parar" onclick="pararMusica()" disabled>⏹ Parar</button>
+        <button class="btn-ctrl btn-share" id="btn-share" onclick="compartilhar()" disabled>📋 Copiar</button>
+      </div>
+
+      <div class="historico-musicas" id="historico-musicas"></div>
+    </section>
+
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

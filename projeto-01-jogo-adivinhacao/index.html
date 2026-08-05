@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🤖 Jogo de Adivinhação — Estilo Akinator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Partículas de fundo decorativas -->
+  <div class="bg-particles" aria-hidden="true">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="container">
+
+    <!-- ===== TELA INICIAL ===== -->
+    <div id="tela-inicio" class="tela ativa">
+      <div class="card card-intro">
+        <div class="avatar-wrapper">
+          <div class="avatar-glow"></div>
+          <span class="avatar-emoji">🤖</span>
+        </div>
+        <h1>Jogo de<br><span class="gradient-text">Adivinhação</span></h1>
+        <p class="subtitle">
+          Pense em um <strong>animal, personagem, objeto, comida ou país</strong>.<br>
+          Vou tentar adivinhar fazendo perguntas inteligentes!
+        </p>
+
+        <div class="category-chips">
+          <span class="chip">🐾 Animais</span>
+          <span class="chip">⭐ Famosos</span>
+          <span class="chip">📦 Objetos</span>
+          <span class="chip">🍕 Comidas</span>
+          <span class="chip">🌍 Países</span>
+        </div>
+
+        <div class="btn-group-intro">
+          <button id="btn-iniciar" onclick="iniciarJogo(false)" class="btn btn-primary btn-lg">
+            <span class="btn-icon">🎮</span> Modo Clássico
+          </button>
+          <button
+            id="btn-modo-ia"
+            onclick="iniciarJogo(true)"
+            class="btn btn-ia btn-lg"
+            aria-label="Modo IA — Powered by Google Gemini"
+          >
+            <span class="btn-icon">🤖</span> Modo IA
+            <span class="ia-live-badge">✨ LIVE</span>
+          </button>
+        </div>
+
+        <p class="version-tag">v2.0 · Modo IA powered by Gemini</p>
+      </div>
+    </div>
+
+    <!-- ===== TELA DE JOGO ===== -->
+    <div id="tela-jogo" class="tela hidden">
+      <div class="card card-jogo">
+
+        <header class="jogo-header">
+          <div class="pergunta-counter">
+            <span class="counter-label">Pergunta</span>
+            <span id="num-pergunta" class="counter-number">1</span>
+          </div>
+          <div class="ia-status">
+            <span id="modo-badge" class="modo-badge" style="display:none">🤖 Modo IA</span>
+          </div>
+        </header>
+
+        <!-- Barra de progresso -->
+        <div class="progresso" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="barra-progresso"></div>
+        </div>
+
+        <!-- Box da pergunta -->
+        <div class="pergunta-box">
+          <div class="ia-avatar-sm">🤖</div>
+          <p id="pergunta-texto" class="pergunta-texto">Carregando pergunta…</p>
+        </div>
+
+        <!-- Botões de resposta -->
+        <div class="botoes-resposta" role="group" aria-label="Responda à pergunta">
+          <button onclick="responder('sim')" class="btn btn-sim btn-resposta" aria-label="Sim">
+            <span class="resp-icon">✅</span>
+            <span class="resp-label">Sim</span>
+          </button>
+          <button onclick="responder('talvez')" class="btn btn-talvez btn-resposta" aria-label="Talvez">
+            <span class="resp-icon">🤔</span>
+            <span class="resp-label">Talvez</span>
+          </button>
+          <button onclick="responder('nao')" class="btn btn-nao btn-resposta" aria-label="Não">
+            <span class="resp-icon">❌</span>
+            <span class="resp-label">Não</span>
+          </button>
+        </div>
+
+        <button onclick="reiniciar()" class="btn-link-ghost">↩ Recomeçar</button>
+      </div>
+    </div>
+
+    <!-- ===== TELA DE RESULTADO (PALPITE) ===== -->
+    <div id="tela-resultado" class="tela hidden">
+      <div class="card card-resultado">
+        <div class="resultado-avatar">
+          <div class="avatar-glow avatar-glow-green"></div>
+          <span class="avatar-emoji">🎯</span>
+        </div>
+        <p class="resultado-sub">Meu palpite é…</p>
+        <div id="palpite-final" class="palpite-display"></div>
+        <p id="resultado-perguntas" class="resultado-info"></p>
+        <div class="botoes-final" role="group" aria-label="O AI acertou?">
+          <button onclick="verificarResposta(true)" class="btn btn-acertou">
+            🎉 Acertou!
+          </button>
+          <button onclick="verificarResposta(false)" class="btn btn-errou">
+            😕 Errou!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TELA FINAL ===== -->
+    <div id="tela-fim" class="tela hidden">
+      <div class="card card-fim">
+        <div id="fim-emoji" class="fim-emoji"></div>
+        <div id="mensagem-fim" class="mensagem-fim"></div>
+        <div id="estrelas-container" class="estrelas" aria-label="Pontuação em estrelas"></div>
+        <p id="estrelas-desc" class="estrelas-desc"></p>
+
+        <!-- Histórico de respostas -->
+        <details class="historico-details">
+          <summary>📋 Ver histórico de respostas</summary>
+          <ul id="lista-historico" class="lista-historico"></ul>
+        </details>
+
+        <button onclick="reiniciar()" class="btn btn-primary btn-lg btn-reiniciar">
+          🔄 Jogar Novamente
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <script src="script.js"></script>
+</body>
+</html>

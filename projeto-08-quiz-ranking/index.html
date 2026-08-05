@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🏆 Quiz Ranking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TELA DE INÍCIO -->
+  <div class="tela" id="tela-inicio">
+    <div class="inicio-wrapper">
+
+      <div class="inicio-hero">
+        <div class="trophy-icon">🏆</div>
+        <h1>Quiz <span class="gradient-text">Ranking</span></h1>
+        <p class="hero-sub">Perguntas reais · Ranking global · Powered by Open Trivia DB</p>
+      </div>
+
+      <div class="inicio-card">
+        <div class="campo">
+          <label for="input-jogador">Seu Nome</label>
+          <input type="text" id="input-jogador" placeholder="Ex: Jogador1, Ana, Rafael…" maxlength="20" />
+        </div>
+
+        <div class="campo">
+          <label>Categoria</label>
+          <div class="cat-grid">
+            <button class="cat-btn active" id="cat-any" onclick="selecionarCat('any', this)">🎲 Geral</button>
+            <button class="cat-btn" id="cat-9" onclick="selecionarCat('9', this)">📚 Conhecimentos</button>
+            <button class="cat-btn" id="cat-11" onclick="selecionarCat('11', this)">🎬 Cinema</button>
+            <button class="cat-btn" id="cat-12" onclick="selecionarCat('12', this)">🎵 Música</button>
+            <button class="cat-btn" id="cat-15" onclick="selecionarCat('15', this)">🎮 Games</button>
+            <button class="cat-btn" id="cat-18" onclick="selecionarCat('18', this)">💻 Tecnologia</button>
+            <button class="cat-btn" id="cat-21" onclick="selecionarCat('21', this)">⚽ Esportes</button>
+            <button class="cat-btn" id="cat-27" onclick="selecionarCat('27', this)">🐾 Animais</button>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Dificuldade</label>
+          <div class="dif-grid">
+            <button class="dif-btn active" id="dif-any" onclick="selecionarDif('any', this)">🎯 Qualquer</button>
+            <button class="dif-btn" id="dif-easy" onclick="selecionarDif('easy', this)">🟢 Fácil</button>
+            <button class="dif-btn" id="dif-medium" onclick="selecionarDif('medium', this)">🟡 Médio</button>
+            <button class="dif-btn" id="dif-hard" onclick="selecionarDif('hard', this)">🔴 Difícil</button>
+          </div>
+        </div>
+
+        <button class="btn-iniciar" onclick="iniciarQuiz()">
+          <span>Jogar Agora</span> <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Ranking mini -->
+      <div class="ranking-card">
+        <h3 class="ranking-titulo">🥇 Top Jogadores</h3>
+        <div id="ranking-mini"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TELA DE LOADING -->
+  <div class="tela hidden" id="tela-loading">
+    <div class="loading-wrapper">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Buscando perguntas<span class="loading-dots">...</span></p>
+      <p class="loading-sub">Open Trivia DB API</p>
+    </div>
+  </div>
+
+  <!-- TELA DE QUIZ -->
+  <div class="tela hidden" id="tela-quiz">
+    <div class="quiz-wrapper">
+
+      <header class="quiz-header">
+        <div class="quiz-meta">
+          <span class="quiz-cat-label" id="categoria-label">🎲 Geral</span>
+          <span class="quiz-dif-label" id="dif-label">🎯</span>
+        </div>
+        <div class="quiz-stats">
+          <span class="stat-placar" id="placar">0 pts</span>
+          <div class="timer-ring" id="timer-container">
+            <span id="timer" class="timer-num">15</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar" id="barra-quiz"></div>
+      </div>
+      <div class="quiz-info">
+        <span id="num-pergunta">Pergunta 1/10</span>
+      </div>
+
+      <div class="pergunta-card">
+        <p id="texto-pergunta" class="pergunta-txt">Carregando…</p>
+      </div>
+
+      <div class="opcoes-grid" id="opcoes-container"></div>
+
+    </div>
+  </div>
+
+  <!-- TELA DE RESULTADO -->
+  <div class="tela hidden" id="tela-resultado">
+    <div class="resultado-wrapper">
+
+      <div class="resultado-hero">
+        <div class="trofeu-icon" id="trofeu-icon">🏆</div>
+        <h2 id="nome-resultado">Jogador</h2>
+        <div class="pontos-big" id="pontos-final">0</div>
+        <p class="pontos-label">pontos</p>
+      </div>
+
+      <div class="resultado-stats">
+        <div class="stat-item">
+          <span class="stat-val" id="acertos-final">0/10</span>
+          <span class="stat-lbl">Acertos</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val" id="tempo-final">0s</span>
+          <span class="stat-lbl">Tempo</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val" id="precisao-final">0%</span>
+          <span class="stat-lbl">Precisão</span>
+        </div>
+      </div>
+
+      <p class="mensagem-resultado" id="mensagem-resultado"></p>
+
+      <div class="ranking-final-card">
+        <h3>🏆 Ranking</h3>
+        <div id="ranking-final"></div>
+      </div>
+
+      <div class="resultado-btns">
+        <button class="btn-jogar-novamente" onclick="voltarInicio()">🔄 Jogar Novamente</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔥 Gerador de Memes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">🔥</span>
+        <span class="logo-text">MemeForge</span>
+      </div>
+      <p class="tagline">Crie memes épicos em segundos</p>
+    </div>
+  </header>
+
+  <main class="app-layout">
+
+    <!-- COLUNA ESQUERDA: controles -->
+    <aside class="sidebar">
+
+      <section class="card templates-section">
+        <h2 class="section-title">
+          <span class="section-icon">🖼️</span> Templates
+          <span class="badge" id="badge-count">carregando…</span>
+        </h2>
+        <div class="grid-templates" id="grid-templates">
+          <!-- Skeletons de carregamento -->
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+        <p class="selected-name" id="selected-name">Nenhum template selecionado</p>
+      </section>
+
+      <section class="card editor-section">
+        <h2 class="section-title">
+          <span class="section-icon">✏️</span> Personalizar
+        </h2>
+
+        <div class="campo">
+          <label for="texto-cima">Texto de Cima</label>
+          <input
+            type="text"
+            id="texto-cima"
+            placeholder="QUANDO VOCÊ FINALMENTE…"
+            oninput="atualizarMeme()"
+          />
+        </div>
+
+        <div class="campo">
+          <label for="texto-baixo">Texto de Baixo</label>
+          <input
+            type="text"
+            id="texto-baixo"
+            placeholder="MAS AÍ DESCOBRE QUE…"
+            oninput="atualizarMeme()"
+          />
+        </div>
+
+        <div class="campo-row">
+          <div class="campo campo-half">
+            <label for="cor-texto">Cor do Texto</label>
+            <div class="color-wrapper">
+              <input type="color" id="cor-texto" value="#ffffff" oninput="atualizarMeme()" />
+              <span class="color-preview" id="color-preview">#ffffff</span>
+            </div>
+          </div>
+
+          <div class="campo campo-half">
+            <label for="tamanho-fonte">
+              Tamanho da Fonte
+              <span class="font-size-display" id="valor-fonte">36px</span>
+            </label>
+            <input
+              type="range"
+              id="tamanho-fonte"
+              min="16"
+              max="72"
+              value="36"
+              oninput="atualizarMeme()"
+            />
+          </div>
+        </div>
+
+        <button class="btn-download" onclick="baixarMeme()">
+          <span class="btn-icon">⬇️</span>
+          <span>Baixar Meme</span>
+        </button>
+
+        <button class="btn-api" id="btn-gerar-api" onclick="gerarViaAPI()">
+          <span class="btn-icon">🚀</span>
+          <span>Gerar via API 🚀</span>
+        </button>
+
+        <!-- Mensagem de erro da API -->
+        <p class="erro-api hidden" id="erro-api"></p>
+
+      </section>
+
+    </aside>
+
+    <!-- COLUNA DIREITA: preview canvas -->
+    <section class="preview-area">
+      <div class="card preview-card">
+        <h2 class="section-title">
+          <span class="section-icon">👁️</span> Preview
+        </h2>
+        <div class="canvas-wrapper">
+          <canvas id="canvas-meme" width="600" height="500"></canvas>
+          <div class="canvas-placeholder" id="canvas-placeholder">
+            <span class="placeholder-icon">🖼️</span>
+            <p>Selecione um template para começar</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultado gerado pela API -->
+      <div class="card resultado-api-card hidden" id="resultado-api">
+        <h2 class="section-title">
+          <span class="section-icon">🚀</span> Meme Gerado pela API
+        </h2>
+        <div class="api-result-wrapper">
+          <img id="img-resultado-api" src="" alt="Meme gerado" class="api-result-img" />
+          <a id="link-download-api" class="btn-download-api" target="_blank" rel="noopener"
+             onclick="abrirLinkDownloadAPI()">
+            <span>🔗 Abrir no Imgflip</span>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Feito com 💛 usando <strong>Canvas API</strong> + <strong>Imgflip API</strong></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

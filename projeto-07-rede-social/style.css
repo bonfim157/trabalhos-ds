@@ -1,0 +1,99 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { font-family: 'Poppins', 'Segoe UI', sans-serif; background: #000; color: #e7e9ea; min-height: 100vh; }
+.hidden { display: none !important; }
+
+/* Login */
+.tela-login {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #000, #1a1a2e);
+}
+.login-card {
+  background: #16181c; border: 1px solid #2f3336;
+  border-radius: 20px; padding: 2.5rem; width: 100%; max-width: 380px;
+  display: flex; flex-direction: column; gap: 1rem; text-align: center;
+}
+.login-card h1 { font-size: 2rem; color: #1d9bf0; }
+.login-card p  { color: #8b98a5; font-size: 0.9rem; }
+.login-card input, .login-card select {
+  padding: 0.8rem 1rem; background: #202327;
+  border: 1px solid #2f3336; border-radius: 10px;
+  color: #e7e9ea; font-size: 1rem; outline: none; width: 100%;
+}
+.login-card select option { background: #202327; }
+.login-card button {
+  padding: 0.9rem; background: #1d9bf0; border: none;
+  border-radius: 50px; color: #fff; font-size: 1rem; cursor: pointer; font-weight: bold;
+  transition: background 0.2s;
+}
+.login-card button:hover { background: #1a8cd8; }
+
+/* Feed */
+.tela-feed { display: grid; grid-template-columns: 250px 1fr 300px; min-height: 100vh; max-width: 1200px; margin: 0 auto; }
+
+/* Sidebar Esquerda */
+.sidebar-esquerda {
+  padding: 1rem; border-right: 1px solid #2f3336;
+  display: flex; flex-direction: column; gap: 0.5rem; position: sticky; top: 0; height: 100vh;
+}
+.perfil-mini {
+  background: #16181c; border-radius: 12px; padding: 1rem; margin-bottom: 0.5rem;
+  border: 1px solid #2f3336; font-size: 0.9rem;
+}
+.nav-btn {
+  width: 100%; padding: 0.8rem 1rem; background: none; border: none;
+  color: #e7e9ea; cursor: pointer; border-radius: 50px; text-align: left;
+  font-size: 1rem; transition: background 0.2s;
+}
+.nav-btn:hover, .nav-btn.active { background: rgba(255,255,255,0.08); }
+.nav-sair { color: #f4212e; margin-top: auto; }
+
+/* Conteúdo */
+.conteudo-principal { border-right: 1px solid #2f3336; }
+.aba { padding: 1rem; }
+
+.caixa-post {
+  background: #16181c; border: 1px solid #2f3336;
+  border-radius: 15px; padding: 1rem; margin-bottom: 1rem;
+}
+.caixa-post textarea {
+  width: 100%; background: none; border: none; color: #e7e9ea;
+  font-size: 1rem; resize: none; outline: none; font-family: inherit;
+}
+.post-acoes { display: flex; justify-content: space-between; align-items: center; margin-top: 0.8rem; }
+.post-emojis { display: flex; gap: 0.3rem; }
+.post-emojis button {
+  background: none; border: none; font-size: 1.2rem; cursor: pointer; transition: transform 0.2s;
+}
+.post-emojis button:hover { transform: scale(1.3); }
+.btn-publicar {
+  padding: 0.5rem 1.2rem; background: #1d9bf0; border: none;
+  border-radius: 50px; color: #fff; cursor: pointer; font-weight: bold;
+}
+
+/* Post */
+.post-card {
+  background: #16181c; border: 1px solid #2f3336;
+  border-radius: 15px; padding: 1rem; margin-bottom: 0.8rem; animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1} }
+.post-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+.post-avatar { font-size: 2rem; }
+.post-user-nome { font-weight: bold; font-size: 0.95rem; }
+.post-user-handle { color: #8b98a5; font-size: 0.85rem; }
+.post-tempo { color: #8b98a5; font-size: 0.8rem; margin-left: auto; }
+.post-texto { font-size: 0.95rem; line-height: 1.5; margin-bottom: 0.8rem; }
+.post-acoes-rodape { display: flex; gap: 1.5rem; }
+.btn-acao {
+  background: none; border: none; color: #8b98a5;
+  cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem; transition: color 0.2s;
+}
+.btn-acao:hover { color: #1d9bf0; }
+.btn-acao.curtido { color: #f91880; }
+
+/* Sidebar Direita */
+.sidebar-direita { padding: 1rem; }
+.sidebar-direita h3 { font-size: 0.85rem; color: #8b98a5; margin-bottom: 0.8rem; margin-top: 1rem; }
+.trend-item { padding: 0.5rem; font-size: 0.85rem; color: #1d9bf0; cursor: pointer; }
+.online-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.3rem 0; }
+.online-dot { width: 8px; height: 8px; background: #00ba7c; border-radius: 50%; }

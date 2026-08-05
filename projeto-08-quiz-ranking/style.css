@@ -1,0 +1,108 @@
+/* Quiz Ranking — style.css */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f1e;--surface:#111827;--surface2:#1f2937;
+  --border:rgba(255,255,255,0.08);--text:#f9fafb;--muted:#9ca3af;
+  --accent:#6366f1;--accent2:#818cf8;--green:#10b981;--red:#ef4444;--yellow:#f59e0b;
+  --radius:16px;
+}
+html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text)}
+body::before{content:'';position:fixed;inset:0;z-index:-1;
+  background:radial-gradient(ellipse at 20% 20%,rgba(99,102,241,.15) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 80%,rgba(16,185,129,.1) 0%,transparent 60%)}
+
+.tela{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto}
+.tela.hidden{display:none!important}
+
+/* INÍCIO */
+.inicio-wrapper{width:min(520px,100%);display:flex;flex-direction:column;gap:1.25rem;padding-bottom:2rem}
+.inicio-hero{text-align:center;padding:1rem 0}
+.trophy-icon{font-size:4rem;display:block;margin-bottom:.5rem;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-8px) rotate(5deg)}}
+.inicio-hero h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:800;margin-bottom:.5rem}
+.gradient-text{background:linear-gradient(135deg,#6366f1,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:var(--muted);font-size:.85rem}
+
+.inicio-card,.ranking-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.campo{margin-bottom:1.1rem}
+.campo label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+.campo input[type=text]{width:100%;padding:.7rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:.95rem;outline:none;transition:border-color .2s}
+.campo input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.2)}
+
+.cat-grid,.dif-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem}
+.cat-btn,.dif-btn{padding:.5rem .3rem;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:inherit;font-size:.72rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:center;line-height:1.3}
+.cat-btn:hover,.dif-btn:hover{border-color:var(--accent);color:var(--text)}
+.cat-btn.active,.dif-btn.active{background:rgba(99,102,241,.2);border-color:var(--accent);color:var(--text);font-weight:600}
+
+.btn-iniciar{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--accent),#10b981);border:none;border-radius:12px;color:white;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s}
+.btn-iniciar:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,102,241,.4)}
+
+.ranking-titulo{font-size:.9rem;font-weight:700;margin-bottom:.75rem}
+.rank-item{display:flex;align-items:center;gap:.6rem;padding:.5rem .75rem;background:var(--surface2);border-radius:10px;margin-bottom:.4rem;font-size:.85rem}
+.rank-pts{margin-left:auto;color:var(--accent2);font-weight:600}
+.rank-acc{color:var(--muted);font-size:.75rem}
+.rank-vazio{color:var(--muted);text-align:center;font-size:.85rem;padding:.75rem}
+
+/* LOADING */
+#tela-loading{align-items:center}
+.loading-wrapper{text-align:center}
+.loading-spinner{width:60px;height:60px;border:4px solid rgba(99,102,241,.2);border-top-color:var(--accent);border-radius:50%;margin:0 auto 1.5rem;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:1.1rem;font-weight:600;margin-bottom:.3rem}
+.loading-sub{font-size:.8rem;color:var(--muted)}
+
+/* QUIZ */
+#tela-quiz{align-items:flex-start}
+.quiz-wrapper{width:min(620px,100%);padding-bottom:2rem}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;padding:0 .25rem}
+.quiz-meta{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.quiz-cat-label,.quiz-dif-label{padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:600;background:rgba(99,102,241,.2);border:1px solid rgba(99,102,241,.3);color:var(--accent2)}
+.quiz-stats{display:flex;gap:1rem;align-items:center}
+.stat-placar{font-size:1rem;font-weight:700;color:var(--accent2)}
+
+.timer-ring{width:48px;height:48px;border-radius:50%;background:conic-gradient(var(--accent) 0%,rgba(99,102,241,.2) 0%);display:flex;align-items:center;justify-content:center;position:relative;transition:background .5s}
+.timer-ring::after{content:'';width:34px;height:34px;background:var(--bg);border-radius:50%;position:absolute}
+.timer-num{font-size:.85rem;font-weight:700;z-index:1;color:var(--text)}
+.timer-urgente{color:var(--red)!important}
+
+.progress-bar-wrapper{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:.4rem}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),#10b981);border-radius:3px;transition:width .5s ease;width:0%}
+.quiz-info{font-size:.78rem;color:var(--muted);text-align:right;margin-bottom:1rem}
+
+.pergunta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;min-height:100px;display:flex;align-items:center}
+.pergunta-txt{font-size:clamp(.95rem,2.5vw,1.1rem);font-weight:500;line-height:1.6;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.opcoes-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.opcao{padding:.9rem 1rem;background:var(--surface);border:2px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .2s;text-align:left;line-height:1.4}
+.opcao:hover:not(:disabled){border-color:var(--accent);background:rgba(99,102,241,.1);transform:translateY(-2px)}
+.opcao.correta{border-color:var(--green)!important;background:rgba(16,185,129,.2)!important;color:#6ee7b7!important}
+.opcao.errada{border-color:var(--red)!important;background:rgba(239,68,68,.15)!important;color:#fca5a5!important}
+.opcao:disabled{cursor:not-allowed}
+
+/* RESULTADO */
+#tela-resultado{align-items:flex-start}
+.resultado-wrapper{width:min(520px,100%);display:flex;flex-direction:column;gap:1.25rem;padding-bottom:2rem}
+.resultado-hero{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem 1.5rem}
+.trofeu-icon{font-size:4rem;display:block;margin-bottom:.75rem;animation:bounce 2s ease-in-out infinite}
+.resultado-hero h2{font-size:1.5rem;font-weight:700;margin-bottom:.5rem}
+.pontos-big{font-size:3.5rem;font-weight:800;color:var(--accent2);line-height:1}
+.pontos-label{color:var(--muted);font-size:.85rem}
+
+.resultado-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+.stat-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;text-align:center}
+.stat-val{display:block;font-size:1.5rem;font-weight:700;color:var(--accent2)}
+.stat-lbl{font-size:.75rem;color:var(--muted)}
+.mensagem-resultado{text-align:center;font-size:1rem;font-weight:600;padding:.75rem}
+
+.ranking-final-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.ranking-final-card h3{font-size:.9rem;font-weight:700;margin-bottom:.75rem}
+
+.btn-jogar-novamente{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--accent),#10b981);border:none;border-radius:12px;color:white;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-jogar-novamente:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(99,102,241,.4)}
+
+@media(max-width:500px){
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .dif-grid{grid-template-columns:repeat(2,1fr)}
+  .opcoes-grid{grid-template-columns:1fr}
+}

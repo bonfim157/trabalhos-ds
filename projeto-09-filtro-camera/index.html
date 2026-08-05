@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📷 Filtro Câmera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <div class="logo">📷 <span>SnapFilter <span class="badge">STUDIO</span></span></div>
+    <p class="header-sub">Filtros ao vivo · Stickers · Capturas</p>
+  </header>
+
+  <main class="main-layout">
+
+    <!-- CÂMERA -->
+    <section class="camera-section">
+      <div class="camera-wrap">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="canvas-filtro"></canvas>
+        <div class="cam-placeholder" id="cam-placeholder">
+          <span>📷</span>
+          <p>Ative a câmera para começar</p>
+        </div>
+      </div>
+
+      <div class="cam-btns">
+        <button class="btn-cam" id="btn-camera" onclick="toggleCamera()">📷 Ativar Câmera</button>
+        <button class="btn-foto" id="btn-foto" onclick="tirarFoto()" disabled>📸 Capturar</button>
+      </div>
+    </section>
+
+    <!-- CONTROLES -->
+    <section class="controles-section">
+
+      <!-- Filtros -->
+      <div class="control-card">
+        <h3 class="ctrl-titulo">🎨 Filtros</h3>
+        <div class="filtros-grid">
+          <button class="filtro-btn active" onclick="aplicarFiltro('normal',this)">📷 Normal</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('pb',this)">⬛ P&B</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('sepia',this)">🟤 Sépia</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('invertido',this)">🔄 Invertido</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('brilho',this)">☀️ Brilhante</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('escuro',this)">🌙 Sombrio</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('vermelho',this)">🔴 Vermelho</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('verde',this)">🟢 Verde</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('azul',this)">🔵 Azul</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('roxo',this)">🟣 Roxo</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('pixelado',this)">🟦 Pixel</button>
+          <button class="filtro-btn" onclick="aplicarFiltro('espelho',this)">🪞 Espelho</button>
+        </div>
+      </div>
+
+      <!-- Stickers -->
+      <div class="control-card">
+        <h3 class="ctrl-titulo">🎭 Stickers</h3>
+        <div class="stickers-grid">
+          <button class="sticker-btn" data-sticker="oculos" onclick="toggleSticker('oculos',this)">🕶️ Óculos</button>
+          <button class="sticker-btn" data-sticker="chapeu" onclick="toggleSticker('chapeu',this)">🎩 Chapéu</button>
+          <button class="sticker-btn" data-sticker="coroa" onclick="toggleSticker('coroa',this)">👑 Coroa</button>
+          <button class="sticker-btn" data-sticker="arcoiris" onclick="toggleSticker('arcoiris',this)">🌈 Arco-íris</button>
+          <button class="sticker-btn" data-sticker="fogo" onclick="toggleSticker('fogo',this)">🔥 Fogo</button>
+          <button class="sticker-btn" data-sticker="estrelas" onclick="toggleSticker('estrelas',this)">⭐ Estrelas</button>
+        </div>
+      </div>
+
+      <!-- Ajustes -->
+      <div class="control-card">
+        <h3 class="ctrl-titulo">⚙️ Ajustes</h3>
+        <div class="slider-item">
+          <label>☀️ Brilho <span id="val-brilho">100%</span></label>
+          <input type="range" id="slider-brilho" min="0" max="200" value="100" oninput="ajustar()"/>
+        </div>
+        <div class="slider-item">
+          <label>◑ Contraste <span id="val-contraste">100%</span></label>
+          <input type="range" id="slider-contraste" min="0" max="200" value="100" oninput="ajustar()"/>
+        </div>
+        <div class="slider-item">
+          <label>🎨 Saturação <span id="val-saturacao">100%</span></label>
+          <input type="range" id="slider-saturacao" min="0" max="300" value="100" oninput="ajustar()"/>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- GALERIA -->
+  <section class="galeria-section" id="galeria-section" style="display:none">
+    <h3 class="galeria-titulo">📸 Capturas <span id="galeria-count">0</span></h3>
+    <div class="galeria-grid" id="galeria-fotos"></div>
+  </section>
+
+</div>
+<script src="../midias-meme/face-api.js/dist/face-api.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

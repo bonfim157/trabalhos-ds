@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>😊 Detector de Emoções</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app">
+
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">🧠</span>
+          <span class="logo-text">EmoScan <span class="badge-ai">AI</span></span>
+        </div>
+        <p class="header-sub">Detecção de emoções em tempo real</p>
+      </div>
+    </header>
+
+    <main class="main-layout">
+
+      <!-- COLUNA CÂMERA -->
+      <section class="camera-col">
+        <div class="camera-card">
+          <div class="camera-wrapper">
+            <video id="video" autoplay playsinline muted></video>
+            <canvas id="overlay"></canvas>
+            <div class="camera-placeholder" id="camera-placeholder">
+              <span class="placeholder-icon">📷</span>
+              <p>Câmera desativada</p>
+              <p class="placeholder-sub">Clique em "Ativar Câmera" para começar</p>
+            </div>
+            <!-- Scan line animada -->
+            <div class="scan-line" id="scan-line"></div>
+          </div>
+
+          <div class="camera-controls">
+            <button class="btn-camera" id="btn-camera" onclick="toggleCamera()">
+              📷 Ativar Câmera
+            </button>
+            <button class="btn-foto" id="btn-foto" onclick="tirarFoto()" disabled>
+              📸 Capturar
+            </button>
+          </div>
+        </div>
+
+        <!-- Estatísticas da sessão -->
+        <div class="stats-card" id="stats-card">
+          <h3 class="stats-titulo">📊 Sessão</h3>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <span class="stat-num" id="stat-tempo">0s</span>
+              <span class="stat-lbl">Tempo</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" id="stat-dominante">—</span>
+              <span class="stat-lbl">Mais frequente</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" id="stat-deteccoes">0</span>
+              <span class="stat-lbl">Detecções</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUNA EMOÇÕES -->
+      <section class="emocoes-col">
+
+        <!-- Emoção dominante -->
+        <div class="dominante-card">
+          <div class="dominante-emoji" id="emoji-grande">😐</div>
+          <div class="dominante-info">
+            <div class="dominante-nome" id="emocao-nome">Neutro</div>
+            <div class="confianca-wrapper">
+              <div class="confianca-bar">
+                <div class="confianca-fill" id="confianca-fill"></div>
+              </div>
+              <span class="confianca-txt" id="confianca-texto">Confiança: 0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barras de emoções -->
+        <div class="emocoes-card">
+          <h3 class="card-titulo">Análise Completa</h3>
+          <div id="lista-emocoes"></div>
+        </div>
+
+        <!-- Histórico -->
+        <div class="historico-card">
+          <h3 class="card-titulo">Histórico <span class="hist-count" id="hist-count">0</span></h3>
+          <div id="historico-lista" class="historico-lista"></div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- GALERIA DE CAPTURAS -->
+    <section class="galeria-section" id="galeria-section" style="display:none">
+      <h3 class="galeria-titulo">📸 Capturas</h3>
+      <div class="galeria-grid" id="galeria-fotos"></div>
+    </section>
+
+  </div>
+
+  <script src="../midias-meme/face-api.js/dist/face-api.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

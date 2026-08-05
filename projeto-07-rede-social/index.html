@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📱 ConnectDS — Rede Social</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Login / Registro -->
+    <div id="tela-login" class="tela-login">
+      <div class="login-card">
+        <h1>📱 ConnectDS</h1>
+        <p>A rede social da turma</p>
+        <input type="text" id="input-nome" placeholder="Seu nome" />
+        <input type="text" id="input-user" placeholder="@usuario (sem espaços)" />
+        <select id="input-avatar">
+          <option value="😎">😎 Legal</option>
+          <option value="🤓">🤓 Nerd</option>
+          <option value="🎮">🎮 Gamer</option>
+          <option value="🎨">🎨 Artista</option>
+          <option value="🏋️">🏋️ Atleta</option>
+          <option value="🎵">🎵 Músico</option>
+          <option value="👩‍💻">👩‍💻 Dev</option>
+          <option value="🌟">🌟 Estrela</option>
+        </select>
+        <button onclick="entrar()">🚀 Entrar na Rede</button>
+      </div>
+    </div>
+
+    <!-- Feed Principal -->
+    <div id="tela-feed" class="tela-feed hidden">
+      <!-- Sidebar Esquerda -->
+      <aside class="sidebar-esquerda">
+        <div class="perfil-mini" id="perfil-mini"></div>
+        <nav>
+          <button onclick="mudarAba('feed')" class="nav-btn active" id="nav-feed">🏠 Feed</button>
+          <button onclick="mudarAba('explorar')" class="nav-btn" id="nav-explorar">🔍 Explorar</button>
+          <button onclick="mudarAba('perfil')" class="nav-btn" id="nav-perfil">👤 Perfil</button>
+          <button onclick="sair()" class="nav-btn nav-sair">🚪 Sair</button>
+        </nav>
+      </aside>
+
+      <!-- Conteúdo Principal -->
+      <main class="conteudo-principal">
+        <!-- Aba Feed -->
+        <div id="aba-feed" class="aba">
+          <div class="caixa-post">
+            <textarea id="input-post" placeholder="O que você está pensando? 💭" rows="3"></textarea>
+            <div class="post-acoes">
+              <div class="post-emojis">
+                <button onclick="adicionarEmoji('😂')">😂</button>
+                <button onclick="adicionarEmoji('🔥')">🔥</button>
+                <button onclick="adicionarEmoji('❤️')">❤️</button>
+                <button onclick="adicionarEmoji('😎')">😎</button>
+                <button onclick="adicionarEmoji('🎉')">🎉</button>
+              </div>
+              <button onclick="publicarPost()" class="btn-publicar">Publicar</button>
+            </div>
+          </div>
+          <div id="lista-posts"></div>
+        </div>
+
+        <!-- Aba Explorar -->
+        <div id="aba-explorar" class="aba hidden">
+          <h2>🔍 Explorar Usuários</h2>
+          <div id="lista-usuarios-explorar"></div>
+        </div>
+
+        <!-- Aba Perfil -->
+        <div id="aba-perfil" class="aba hidden">
+          <div id="perfil-completo"></div>
+        </div>
+      </main>
+
+      <!-- Sidebar Direita -->
+      <aside class="sidebar-direita">
+        <h3>🔥 Trending</h3>
+        <div id="trending-lista"></div>
+        <h3>👥 Online Agora</h3>
+        <div id="online-lista"></div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

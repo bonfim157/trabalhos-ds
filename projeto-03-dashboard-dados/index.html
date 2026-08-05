@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📊 Dashboard em Tempo Real</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard">
+    <header>
+      <h1>📊 Dashboard em Tempo Real</h1>
+      <div class="status-bar">
+        <span class="dot-live"></span>
+        <span>Ao vivo — atualiza a cada 2 segundos</span>
+        <span id="relogio" class="relogio"></span>
+      </div>
+    </header>
+
+    <!-- Cards de métricas -->
+    <div class="cards">
+      <div class="card card-azul">
+        <div class="card-icon">🌡️</div>
+        <div class="card-info">
+          <span class="card-label">Temperatura</span>
+          <span class="card-valor" id="temperatura">--°C</span>
+        </div>
+      </div>
+      <div class="card card-verde">
+        <div class="card-icon">👥</div>
+        <div class="card-info">
+          <span class="card-label">Usuários Online</span>
+          <span class="card-valor" id="usuarios">--</span>
+        </div>
+      </div>
+      <div class="card card-amarelo">
+        <div class="card-icon">💰</div>
+        <div class="card-info">
+          <span class="card-label">Dólar (USD)</span>
+          <span class="card-valor" id="dolar">R$ --</span>
+        </div>
+      </div>
+      <div class="card card-roxo">
+        <div class="card-icon">⚡</div>
+        <div class="card-info">
+          <span class="card-label">CPU Usage</span>
+          <span class="card-valor" id="cpu">--%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="graficos">
+      <div class="grafico-box">
+        <h3>📈 Temperatura (últimos 20s)</h3>
+        <canvas id="grafico-temp"></canvas>
+      </div>
+      <div class="grafico-box">
+        <h3>👥 Usuários Online</h3>
+        <canvas id="grafico-usuarios"></canvas>
+      </div>
+    </div>
+
+    <!-- Tabela de logs -->
+    <div class="log-box">
+      <h3>📋 Log de Eventos</h3>
+      <div id="log-lista"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

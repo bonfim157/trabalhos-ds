@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>💬 ChatBot IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TELA DE CONFIGURAÇÃO -->
+  <div class="tela" id="tela-config">
+    <div class="config-wrapper">
+      <div class="config-hero">
+        <div class="config-avatar">🤖</div>
+        <h1 class="config-title">Crie seu <span class="gradient-text">ChatBot IA</span></h1>
+        <p class="config-subtitle">Powered by Google Gemini — respostas reais de IA</p>
+      </div>
+
+      <div class="config-card">
+        <div class="campo">
+          <label for="bot-nome">Nome do Bot</label>
+          <input type="text" id="bot-nome" placeholder="Ex: ARIA, MAX, LUNA…" maxlength="20" />
+        </div>
+
+        <div class="campo">
+          <label>Personalidade</label>
+          <div class="personalidade-grid" id="personalidade-grid">
+            <button class="pers-btn active" data-pers="amigavel" onclick="selecionarPers(this)">
+              <span class="pers-icon">😊</span>
+              <span class="pers-label">Amigável</span>
+            </button>
+            <button class="pers-btn" data-pers="formal" onclick="selecionarPers(this)">
+              <span class="pers-icon">🎩</span>
+              <span class="pers-label">Formal</span>
+            </button>
+            <button class="pers-btn" data-pers="sarcastico" onclick="selecionarPers(this)">
+              <span class="pers-icon">😏</span>
+              <span class="pers-label">Sarcástico</span>
+            </button>
+            <button class="pers-btn" data-pers="motivacional" onclick="selecionarPers(this)">
+              <span class="pers-icon">💪</span>
+              <span class="pers-label">Motivacional</span>
+            </button>
+            <button class="pers-btn" data-pers="geek" onclick="selecionarPers(this)">
+              <span class="pers-icon">👾</span>
+              <span class="pers-label">Geek</span>
+            </button>
+            <button class="pers-btn" data-pers="comico" onclick="selecionarPers(this)">
+              <span class="pers-icon">😂</span>
+              <span class="pers-label">Cômico</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Área de Especialidade</label>
+          <select id="bot-area">
+            <option value="geral">🌐 Geral</option>
+            <option value="tech">💻 Tecnologia</option>
+            <option value="games">🎮 Games</option>
+            <option value="musica">🎵 Música</option>
+            <option value="estudos">📚 Estudos</option>
+            <option value="humor">😂 Humor & Entretenimento</option>
+          </select>
+        </div>
+
+        <div class="campo">
+          <label>Cor do Bot</label>
+          <div class="cor-grid">
+            <button class="cor-btn active" data-cor="azul" style="--c:#2563eb" onclick="selecionarCor(this)"></button>
+            <button class="cor-btn" data-cor="roxo" style="--c:#7c3aed" onclick="selecionarCor(this)"></button>
+            <button class="cor-btn" data-cor="verde" style="--c:#059669" onclick="selecionarCor(this)"></button>
+            <button class="cor-btn" data-cor="rosa" style="--c:#db2777" onclick="selecionarCor(this)"></button>
+            <button class="cor-btn" data-cor="laranja" style="--c:#ea580c" onclick="selecionarCor(this)"></button>
+            <button class="cor-btn" data-cor="ciano" style="--c:#0891b2" onclick="selecionarCor(this)"></button>
+          </div>
+        </div>
+
+        <button class="btn-criar" onclick="criarBot()">
+          Criar Bot <span>→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DE CHAT -->
+  <div class="tela hidden" id="tela-chat">
+    <div class="chat-container">
+
+      <!-- Header -->
+      <div class="chat-header" id="chat-header">
+        <button class="btn-voltar" onclick="voltarConfig()" title="Voltar">←</button>
+        <div class="header-bot-info">
+          <div class="header-avatar" id="header-avatar">🤖</div>
+          <div>
+            <div class="header-nome" id="bot-nome-header">BOT</div>
+            <div class="header-status">
+              <span class="status-dot"></span>
+              <span id="status-texto">Online · Gemini IA</span>
+            </div>
+          </div>
+        </div>
+        <div class="header-acoes">
+          <span class="msg-counter" id="msg-counter">0 msgs</span>
+          <button class="btn-limpar" onclick="limparChat()" title="Limpar chat">🗑️</button>
+        </div>
+      </div>
+
+      <!-- Mensagens -->
+      <div class="chat-mensagens" id="chat-mensagens"></div>
+
+      <!-- Input -->
+      <div class="chat-input-area">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="input-mensagem"
+            placeholder="Digite sua mensagem…"
+            onkeydown="teclaEnter(event)"
+            autocomplete="off"
+            maxlength="500"
+          />
+          <button class="btn-enviar" id="btn-enviar" onclick="enviarMensagem()">
+            <span class="enviar-icon">➤</span>
+          </button>
+        </div>
+        <div class="input-footer">
+          <span class="powered-by">⚡ Powered by Google Gemini</span>
+          <span class="char-counter" id="char-counter">0/500</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
