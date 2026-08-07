@@ -3,146 +3,582 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌐 Gerador de Site</title>
+  <title>🌐 SiteGen AI — Gerador de Portfólio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <div class="app">
 
-  <!-- TELA DE FORMULÁRIO -->
-  <div class="tela" id="tela-form">
+  <!-- ═══════════════════════════════════════════
+       TELA PRINCIPAL — EDITOR + PREVIEW AO VIVO
+  ═══════════════════════════════════════════ -->
+  <div class="tela" id="tela-editor">
 
-    <header class="header">
+    <!-- TOPBAR -->
+    <header class="topbar">
       <div class="logo">🌐 <span>SiteGen <span class="badge-ai">AI</span></span></div>
-      <p class="header-sub">Crie seu portfólio profissional com IA</p>
+      <p class="topbar-sub">Crie seu portfólio profissional com IA</p>
+      <div class="topbar-actions">
+        <button class="btn-preview-full" onclick="abrirPreviewCompleto()">👁️ Preview</button>
+        <button class="btn-exportar-top" onclick="exportarSite()">⬇️ Baixar HTML</button>
+      </div>
     </header>
 
-    <div class="form-layout">
+    <div class="editor-layout">
 
-      <!-- Formulário -->
-      <div class="form-card">
-        <h2 class="form-titulo">✏️ Suas Informações</h2>
+      <!-- ── PAINEL ESQUERDO: FORMULÁRIO ── -->
+      <div class="painel-form" id="painel-form">
 
-        <div class="form-row">
+        <!-- ABAS DE NAVEGAÇÃO -->
+        <div class="form-tabs">
+          <button class="tab-btn active" data-tab="identidade" onclick="mudarAba(this,'identidade')">👤 Identidade</button>
+          <button class="tab-btn" data-tab="conteudo" onclick="mudarAba(this,'conteudo')">📋 Conteúdo</button>
+          <button class="tab-btn" data-tab="experiencia" onclick="mudarAba(this,'experiencia')">🏆 Experiência</button>
+          <button class="tab-btn" data-tab="visual" onclick="mudarAba(this,'visual')">🎨 Visual</button>
+          <button class="tab-btn" data-tab="secoes" onclick="mudarAba(this,'secoes')">🔧 Seções</button>
+        </div>
+
+        <!-- ─────────────────── ABA: IDENTIDADE ─────────────────── -->
+        <div class="tab-content active" id="tab-identidade">
+
+          <div class="section-title">Informações pessoais</div>
+
+          <div class="form-row">
+            <div class="campo">
+              <label>Nome completo</label>
+              <input type="text" id="f-nome" placeholder="Ex: Rafael Bonfim" oninput="atualizarPreview()"/>
+            </div>
+            <div class="campo">
+              <label>Profissão / Título</label>
+              <input type="text" id="f-profissao" placeholder="Ex: Desenvolvedor Full Stack" oninput="atualizarPreview()"/>
+              <button class="btn-ia-mini" onclick="gerarTituloIA()">✨ Melhorar com IA</button>
+            </div>
+          </div>
+
           <div class="campo">
-            <label>Nome completo</label>
-            <input type="text" id="f-nome" placeholder="Ex: Rafael Bonfim"/>
+            <label>Bio / Sobre você</label>
+            <textarea id="f-bio" rows="3" placeholder="Escreva algo sobre você…" oninput="atualizarPreview()"></textarea>
+            <button class="btn-ia-bio" id="btn-ia-bio" onclick="gerarBioIA()">✨ Gerar Bio com IA</button>
+          </div>
+
+          <div class="campo">
+            <label>Email de contato</label>
+            <input type="email" id="f-email" placeholder="seuemail@exemplo.com" oninput="atualizarPreview()"/>
+          </div>
+
+          <div class="form-row">
+            <div class="campo">
+              <label>🐙 GitHub (usuário)</label>
+              <input type="text" id="f-github" placeholder="seu-usuario" oninput="atualizarPreview()"/>
+            </div>
+            <div class="campo">
+              <label>📸 Instagram (usuário)</label>
+              <input type="text" id="f-instagram" placeholder="@seuinstagram" oninput="atualizarPreview()"/>
+            </div>
           </div>
           <div class="campo">
-            <label>Profissão / Título</label>
-            <input type="text" id="f-profissao" placeholder="Ex: Desenvolvedor Web"/>
+            <label>💼 LinkedIn (usuário)</label>
+            <input type="text" id="f-linkedin" placeholder="seu-linkedin" oninput="atualizarPreview()"/>
           </div>
+
+          <!-- FOTO DE PERFIL -->
+          <div class="section-title" style="margin-top:.5rem">Foto de perfil</div>
+          <div class="upload-area" id="upload-perfil-area" onclick="document.getElementById('upload-perfil').click()">
+            <div class="upload-preview-wrap">
+              <div class="upload-avatar-preview" id="perfil-preview">
+                <span class="upload-placeholder-icon">📷</span>
+                <span class="upload-placeholder-text">Clique para adicionar foto</span>
+              </div>
+            </div>
+            <input type="file" id="upload-perfil" accept="image/*" style="display:none" onchange="carregarFotoPerfil(event)"/>
+            <div class="upload-info">
+              <span>JPG, PNG ou WebP — recomendado 400×400px</span>
+              <button class="btn-remover-img" id="btn-remover-perfil" onclick="removerFoto('perfil',event)" style="display:none">✕ Remover</button>
+            </div>
+          </div>
+
+          <!-- EMOJI FALLBACK -->
+          <div class="campo" id="campo-avatar-emoji">
+            <label>Ou escolha um avatar emoji</label>
+            <div class="avatar-grid" id="avatar-grid">
+              <button class="avatar-op selected" onclick="selAvatar(this,'👨‍💻')">👨‍💻</button>
+              <button class="avatar-op" onclick="selAvatar(this,'👩‍💻')">👩‍💻</button>
+              <button class="avatar-op" onclick="selAvatar(this,'🧑‍🎨')">🧑‍🎨</button>
+              <button class="avatar-op" onclick="selAvatar(this,'🧑‍🚀')">🧑‍🚀</button>
+              <button class="avatar-op" onclick="selAvatar(this,'🧙')">🧙</button>
+              <button class="avatar-op" onclick="selAvatar(this,'🦸')">🦸</button>
+              <button class="avatar-op" onclick="selAvatar(this,'🤖')">🤖</button>
+              <button class="avatar-op" onclick="selAvatar(this,'👾')">👾</button>
+              <button class="avatar-op" onclick="selAvatar(this,'🧑‍🔬')">🧑‍🔬</button>
+              <button class="avatar-op" onclick="selAvatar(this,'🎮')">🎮</button>
+            </div>
+          </div>
+
+          <!-- BANNER -->
+          <div class="section-title">Imagem de banner</div>
+          <div class="upload-area upload-banner-area" id="upload-banner-area" onclick="document.getElementById('upload-banner').click()">
+            <div class="banner-preview-wrap" id="banner-preview-wrap">
+              <span class="upload-placeholder-icon">🖼️</span>
+              <span class="upload-placeholder-text">Clique para adicionar banner (1200×400px)</span>
+            </div>
+            <input type="file" id="upload-banner" accept="image/*" style="display:none" onchange="carregarBanner(event)"/>
+            <div class="upload-info">
+              <span>JPG, PNG ou WebP — recomendado 1200×400px</span>
+              <button class="btn-remover-img" id="btn-remover-banner" onclick="removerFoto('banner',event)" style="display:none">✕ Remover</button>
+            </div>
+          </div>
+
         </div>
 
-        <div class="campo">
-          <label>Bio / Sobre você</label>
-          <textarea id="f-bio" rows="3" placeholder="Escreva algo sobre você…"></textarea>
-          <button class="btn-ia-bio" id="btn-ia-bio" onclick="gerarBioIA()">
-            ✨ Gerar Bio com IA
-          </button>
-        </div>
+        <!-- ─────────────────── ABA: CONTEÚDO ─────────────────── -->
+        <div class="tab-content" id="tab-conteudo">
 
-        <div class="form-row">
+          <!-- SKILLS -->
+          <div class="section-title">🛠️ Habilidades</div>
           <div class="campo">
-            <label>🐙 GitHub (usuário)</label>
-            <input type="text" id="f-github" placeholder="seu-usuario"/>
+            <div class="skill-input-row">
+              <input type="text" id="skill-input" placeholder="Ex: React, Python, Figma…" onkeypress="if(event.key==='Enter')addSkill()"/>
+              <button class="btn-add-skill" onclick="addSkill()">+</button>
+            </div>
+            <button class="btn-ia-mini" onclick="sugerirSkillsIA()" style="margin-bottom:.5rem">✨ Sugerir Skills com IA</button>
+            <div id="skills-lista" class="skills-lista"></div>
           </div>
+
+          <!-- PROJETOS -->
+          <div class="section-title">📁 Projetos</div>
+          <div id="projetos-lista-editor" class="projetos-lista-editor"></div>
+          <button class="btn-adicionar-bloco" onclick="abrirModalProjeto()">+ Adicionar Projeto</button>
+
+          <!-- SOBRE LONGO -->
+          <div class="section-title">📝 Texto "Sobre mim" (expandido)</div>
           <div class="campo">
-            <label>📸 Instagram (usuário)</label>
-            <input type="text" id="f-instagram" placeholder="@seuinstagram"/>
+            <textarea id="f-sobre" rows="5" placeholder="Fale mais sobre sua história, motivações, objetivos de carreira…" oninput="atualizarPreview()"></textarea>
           </div>
-        </div>
-        <div class="campo">
-          <label>💼 LinkedIn (usuário)</label>
-          <input type="text" id="f-linkedin" placeholder="seu-linkedin"/>
+
         </div>
 
-        <!-- Avatar -->
-        <div class="campo">
-          <label>Avatar</label>
-          <div class="avatar-grid" id="avatar-grid">
-            <button class="avatar-op selected" onclick="selAvatar(this,'👨‍💻')">👨‍💻</button>
-            <button class="avatar-op" onclick="selAvatar(this,'👩‍💻')">👩‍💻</button>
-            <button class="avatar-op" onclick="selAvatar(this,'🧑‍🎨')">🧑‍🎨</button>
-            <button class="avatar-op" onclick="selAvatar(this,'🧑‍🚀')">🧑‍🚀</button>
-            <button class="avatar-op" onclick="selAvatar(this,'🧙')">🧙</button>
-            <button class="avatar-op" onclick="selAvatar(this,'🦸')">🦸</button>
-            <button class="avatar-op" onclick="selAvatar(this,'🤖')">🤖</button>
-            <button class="avatar-op" onclick="selAvatar(this,'👾')">👾</button>
-          </div>
+        <!-- ─────────────────── ABA: EXPERIÊNCIA ─────────────────── -->
+        <div class="tab-content" id="tab-experiencia">
+
+          <div class="section-title">🏆 Experiência Profissional</div>
+          <div id="experiencias-lista-editor" class="experiencias-lista-editor"></div>
+          <button class="btn-adicionar-bloco" onclick="abrirModalExperiencia()">+ Adicionar Experiência</button>
+
+          <div class="section-title" style="margin-top:1.5rem">🎓 Formação Acadêmica</div>
+          <div id="formacoes-lista-editor" class="formacoes-lista-editor"></div>
+          <button class="btn-adicionar-bloco" onclick="abrirModalFormacao()">+ Adicionar Formação</button>
+
         </div>
 
-        <!-- Skills -->
-        <div class="campo">
-          <label>Habilidades</label>
-          <div class="skill-input-row">
-            <input type="text" id="skill-input" placeholder="Ex: React, Python, Design…" onkeypress="if(event.key==='Enter')addSkill()"/>
-            <button class="btn-add-skill" onclick="addSkill()">+</button>
+        <!-- ─────────────────── ABA: VISUAL ─────────────────── -->
+        <div class="tab-content" id="tab-visual">
+
+          <div class="section-title">🎨 Tema de Cores</div>
+          <div class="temas-grid">
+            <button class="tema-btn active" data-tema="dark-azul" onclick="selTema(this,'dark-azul')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#0d1117,#2563eb)"></span>
+              <span>Dark Azul</span>
+            </button>
+            <button class="tema-btn" data-tema="dark-roxo" onclick="selTema(this,'dark-roxo')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#0f0c29,#a855f7)"></span>
+              <span>Dark Roxo</span>
+            </button>
+            <button class="tema-btn" data-tema="neon-verde" onclick="selTema(this,'neon-verde')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#001a00,#00ff41)"></span>
+              <span>Neon Verde</span>
+            </button>
+            <button class="tema-btn" data-tema="sunset" onclick="selTema(this,'sunset')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#1a0a00,#f97316)"></span>
+              <span>Sunset</span>
+            </button>
+            <button class="tema-btn" data-tema="ocean" onclick="selTema(this,'ocean')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#001a2c,#06b6d4)"></span>
+              <span>Ocean</span>
+            </button>
+            <button class="tema-btn" data-tema="claro" onclick="selTema(this,'claro')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#f8fafc,#3b82f6)"></span>
+              <span>Claro</span>
+            </button>
+            <button class="tema-btn" data-tema="midnight-pink" onclick="selTema(this,'midnight-pink')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#1a0020,#ec4899)"></span>
+              <span>Midnight Pink</span>
+            </button>
+            <button class="tema-btn" data-tema="cyberpunk" onclick="selTema(this,'cyberpunk')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#0a0a0a,#ffe600)"></span>
+              <span>Cyberpunk</span>
+            </button>
+            <button class="tema-btn" data-tema="mono" onclick="selTema(this,'mono')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#111,#888)"></span>
+              <span>Mono</span>
+            </button>
+            <button class="tema-btn" data-tema="minimal" onclick="selTema(this,'minimal')">
+              <span class="tema-preview" style="background:linear-gradient(135deg,#fff,#e5e7eb)"></span>
+              <span>Minimal</span>
+            </button>
           </div>
-          <div id="skills-lista" class="skills-lista"></div>
+
+          <div class="section-title">🔤 Fonte</div>
+          <div class="fontes-grid">
+            <button class="fonte-btn active" data-fonte="Poppins" onclick="selFonte(this,'Poppins')" style="font-family:'Poppins'">Poppins</button>
+            <button class="fonte-btn" data-fonte="Inter" onclick="selFonte(this,'Inter')" style="font-family:'Inter'">Inter</button>
+            <button class="fonte-btn" data-fonte="Fira Code" onclick="selFonte(this,'Fira Code')" style="font-family:'Fira Code'">Fira Code</button>
+            <button class="fonte-btn" data-fonte="Space Grotesk" onclick="selFonte(this,'Space Grotesk')" style="font-family:'Space Grotesk'">Space Grotesk</button>
+          </div>
+
+          <div class="section-title">📐 Template</div>
+          <p class="section-hint" style="margin-bottom:.5rem">Cada template tem uma estrutura HTML completamente diferente</p>
+          <div class="templates-grid">
+
+            <button class="template-btn active" data-tpl="classic" onclick="selTemplate(this,'classic')">
+              <div class="tpl-preview">
+                <div class="tpl-p tpl-p-classic">
+                  <div class="tpl-circle"></div>
+                  <div class="tpl-line tpl-line-lg"></div>
+                  <div class="tpl-line tpl-line-sm"></div>
+                  <div class="tpl-line tpl-line-md"></div>
+                </div>
+              </div>
+              <strong>Classic</strong>
+              <span>Coluna central, hero com foto grande</span>
+            </button>
+
+            <button class="template-btn" data-tpl="sidebar" onclick="selTemplate(this,'sidebar')">
+              <div class="tpl-preview">
+                <div class="tpl-p tpl-p-sidebar">
+                  <div class="tpl-sidebar-col">
+                    <div class="tpl-circle tpl-circle-sm"></div>
+                    <div class="tpl-line tpl-line-xs"></div>
+                    <div class="tpl-line tpl-line-xs"></div>
+                  </div>
+                  <div class="tpl-main-col">
+                    <div class="tpl-line tpl-line-md"></div>
+                    <div class="tpl-line tpl-line-sm"></div>
+                    <div class="tpl-line tpl-line-lg"></div>
+                  </div>
+                </div>
+              </div>
+              <strong>Sidebar</strong>
+              <span>Perfil lateral fixo + conteúdo</span>
+            </button>
+
+            <button class="template-btn" data-tpl="landing" onclick="selTemplate(this,'landing')">
+              <div class="tpl-preview">
+                <div class="tpl-p tpl-p-landing">
+                  <div class="tpl-hero-full"></div>
+                  <div class="tpl-line tpl-line-md" style="margin-top:4px"></div>
+                  <div class="tpl-grid-2">
+                    <div class="tpl-card-mini"></div>
+                    <div class="tpl-card-mini"></div>
+                  </div>
+                </div>
+              </div>
+              <strong>Landing</strong>
+              <span>Hero fullscreen estilo agência</span>
+            </button>
+
+            <button class="template-btn" data-tpl="cardgrid" onclick="selTemplate(this,'cardgrid')">
+              <div class="tpl-preview">
+                <div class="tpl-p tpl-p-cardgrid">
+                  <div class="tpl-grid-asym">
+                    <div class="tpl-card-mini tpl-card-tall"></div>
+                    <div class="tpl-right-col">
+                      <div class="tpl-card-mini"></div>
+                      <div class="tpl-card-mini"></div>
+                    </div>
+                  </div>
+                  <div class="tpl-grid-3">
+                    <div class="tpl-card-mini"></div>
+                    <div class="tpl-card-mini"></div>
+                    <div class="tpl-card-mini"></div>
+                  </div>
+                </div>
+              </div>
+              <strong>Card Grid</strong>
+              <span>Cards flutuantes assimétricos</span>
+            </button>
+
+            <button class="template-btn" data-tpl="terminal" onclick="selTemplate(this,'terminal')">
+              <div class="tpl-preview">
+                <div class="tpl-p tpl-p-terminal">
+                  <div class="tpl-term-bar">
+                    <span class="tpl-dot r"></span>
+                    <span class="tpl-dot y"></span>
+                    <span class="tpl-dot g"></span>
+                  </div>
+                  <div class="tpl-line tpl-line-code"></div>
+                  <div class="tpl-line tpl-line-code tpl-line-acc"></div>
+                  <div class="tpl-line tpl-line-code"></div>
+                  <div class="tpl-line tpl-line-code tpl-line-sm"></div>
+                </div>
+              </div>
+              <strong>Terminal</strong>
+              <span>Estética de código e CLI</span>
+            </button>
+
+          </div>
+
         </div>
 
-        <!-- Projetos -->
-        <div class="campo">
-          <label>Projetos</label>
-          <div class="proj-input-row">
-            <input type="text" id="proj-nome" placeholder="Nome do projeto"/>
-            <input type="text" id="proj-desc" placeholder="Descrição breve"/>
-            <button class="btn-add-proj" onclick="addProjeto()">+</button>
+        <!-- ─────────────────── ABA: SEÇÕES ─────────────────── -->
+        <div class="tab-content" id="tab-secoes">
+          <div class="section-title">🔧 Ativar / Desativar Seções</div>
+          <p class="section-hint">Escolha quais seções aparecerão no site gerado</p>
+
+          <div class="secoes-lista">
+            <div class="secao-item">
+              <div class="secao-info">
+                <span class="secao-icon">🧑</span>
+                <div>
+                  <strong>Hero</strong>
+                  <span class="secao-desc">Foto, nome, bio e redes sociais</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="sec-hero" checked disabled/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="secao-item">
+              <div class="secao-info">
+                <span class="secao-icon">📝</span>
+                <div>
+                  <strong>Sobre mim</strong>
+                  <span class="secao-desc">Texto expandido sobre você</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="sec-sobre" checked onchange="atualizarPreview()"/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="secao-item">
+              <div class="secao-info">
+                <span class="secao-icon">🛠️</span>
+                <div>
+                  <strong>Habilidades</strong>
+                  <span class="secao-desc">Tags de skills e tecnologias</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="sec-skills" checked onchange="atualizarPreview()"/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="secao-item">
+              <div class="secao-info">
+                <span class="secao-icon">📁</span>
+                <div>
+                  <strong>Projetos</strong>
+                  <span class="secao-desc">Cards de projetos com links</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="sec-projetos" checked onchange="atualizarPreview()"/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="secao-item">
+              <div class="secao-info">
+                <span class="secao-icon">🏆</span>
+                <div>
+                  <strong>Experiência</strong>
+                  <span class="secao-desc">Timeline de experiências profissionais</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="sec-experiencia" checked onchange="atualizarPreview()"/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="secao-item">
+              <div class="secao-info">
+                <span class="secao-icon">🎓</span>
+                <div>
+                  <strong>Formação</strong>
+                  <span class="secao-desc">Cursos e graduações</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="sec-formacao" checked onchange="atualizarPreview()"/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="secao-item">
+              <div class="secao-info">
+                <span class="secao-icon">📬</span>
+                <div>
+                  <strong>Contato</strong>
+                  <span class="secao-desc">Email e redes sociais em destaque</span>
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" id="sec-contato" checked onchange="atualizarPreview()"/>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
           </div>
-          <div id="projetos-lista" class="projetos-lista"></div>
         </div>
 
       </div>
 
-      <!-- Temas + Gerar -->
-      <div class="config-card">
-        <h3 class="cfg-titulo">🎨 Tema Visual</h3>
-        <div class="temas-grid">
-          <button class="tema-btn active" data-tema="dark-azul" onclick="selTema(this,'dark-azul')">
-            <span class="tema-preview" style="background:linear-gradient(135deg,#0d1117,#2563eb)"></span>
-            <span>Dark Azul</span>
-          </button>
-          <button class="tema-btn" data-tema="dark-roxo" onclick="selTema(this,'dark-roxo')">
-            <span class="tema-preview" style="background:linear-gradient(135deg,#0f0c29,#a855f7)"></span>
-            <span>Dark Roxo</span>
-          </button>
-          <button class="tema-btn" data-tema="neon-verde" onclick="selTema(this,'neon-verde')">
-            <span class="tema-preview" style="background:linear-gradient(135deg,#001a00,#00ff41)"></span>
-            <span>Neon Verde</span>
-          </button>
-          <button class="tema-btn" data-tema="sunset" onclick="selTema(this,'sunset')">
-            <span class="tema-preview" style="background:linear-gradient(135deg,#1a0a00,#f97316)"></span>
-            <span>Sunset</span>
-          </button>
-          <button class="tema-btn" data-tema="ocean" onclick="selTema(this,'ocean')">
-            <span class="tema-preview" style="background:linear-gradient(135deg,#001a2c,#06b6d4)"></span>
-            <span>Ocean</span>
-          </button>
-          <button class="tema-btn" data-tema="claro" onclick="selTema(this,'claro')">
-            <span class="tema-preview" style="background:linear-gradient(135deg,#f8fafc,#3b82f6)"></span>
-            <span>Claro</span>
-          </button>
+      <!-- ── PAINEL DIREITO: PREVIEW AO VIVO ── -->
+      <div class="painel-preview" id="painel-preview">
+        <div class="preview-live-header">
+          <span>👁️ Preview ao vivo</span>
+          <span class="preview-live-badge" id="preview-live-badge">Auto-atualiza</span>
         </div>
-
-        <button class="btn-gerar-site" onclick="gerarSite()">
-          🌐 Gerar Site
-        </button>
+        <div class="preview-live-frame" id="preview-live-frame">
+          <!-- Renderizado pelo JS -->
+        </div>
       </div>
 
     </div>
   </div>
 
-  <!-- TELA DE PREVIEW -->
+  <!-- ═══════════════════════════════════════════
+       TELA DE PREVIEW COMPLETO
+  ═══════════════════════════════════════════ -->
   <div class="tela hidden" id="tela-preview">
     <div class="preview-header">
-      <button class="btn-voltar" onclick="voltarForm()">← Editar</button>
+      <button class="btn-voltar" onclick="voltarEditor()">← Editar</button>
       <span class="preview-title">Preview do seu Site</span>
       <button class="btn-exportar" onclick="exportarSite()">⬇️ Baixar HTML</button>
     </div>
     <div class="preview-frame" id="preview-conteudo"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MODAL: ADICIONAR PROJETO
+  ═══════════════════════════════════════════ -->
+  <div class="modal-overlay hidden" id="modal-projeto">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>📁 Adicionar Projeto</h3>
+        <button class="modal-close" onclick="fecharModal('modal-projeto')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo">
+          <label>Nome do projeto *</label>
+          <input type="text" id="mp-nome" placeholder="Ex: E-commerce React"/>
+        </div>
+        <div class="campo">
+          <label>Descrição</label>
+          <textarea id="mp-desc" rows="2" placeholder="Descreva brevemente o projeto…"></textarea>
+          <button class="btn-ia-mini" onclick="gerarDescProjetoIA()">✨ Gerar descrição com IA</button>
+        </div>
+        <div class="campo">
+          <label>URL / Link do projeto</label>
+          <input type="url" id="mp-url" placeholder="https://meu-projeto.com"/>
+        </div>
+        <div class="campo">
+          <label>URL da imagem de capa</label>
+          <input type="url" id="mp-img" placeholder="https://… ou deixe em branco" oninput="previewImgProjeto()"/>
+          <div class="img-projeto-preview" id="img-projeto-preview" style="display:none">
+            <img id="img-projeto-preview-img" src="" alt="preview"/>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Tecnologias utilizadas</label>
+          <input type="text" id="mp-techs" placeholder="React, Node.js, PostgreSQL…"/>
+        </div>
+        <div class="campo">
+          <label>Status</label>
+          <select id="mp-status">
+            <option value="concluido">✅ Concluído</option>
+            <option value="desenvolvimento">🔧 Em Desenvolvimento</option>
+            <option value="opensource">🌐 Open Source</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancelar" onclick="fecharModal('modal-projeto')">Cancelar</button>
+        <button class="btn-confirmar" onclick="salvarProjeto()">Adicionar Projeto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MODAL: ADICIONAR EXPERIÊNCIA
+  ═══════════════════════════════════════════ -->
+  <div class="modal-overlay hidden" id="modal-experiencia">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>🏆 Adicionar Experiência</h3>
+        <button class="modal-close" onclick="fecharModal('modal-experiencia')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo">
+          <label>Empresa *</label>
+          <input type="text" id="me-empresa" placeholder="Ex: Google, Freelancer…"/>
+        </div>
+        <div class="campo">
+          <label>Cargo *</label>
+          <input type="text" id="me-cargo" placeholder="Ex: Desenvolvedor Front-end Senior"/>
+        </div>
+        <div class="form-row">
+          <div class="campo">
+            <label>Início</label>
+            <input type="text" id="me-inicio" placeholder="Jan 2022"/>
+          </div>
+          <div class="campo">
+            <label>Fim</label>
+            <input type="text" id="me-fim" placeholder="Dez 2023 (ou 'Atual')"/>
+          </div>
+        </div>
+        <div class="campo">
+          <label>Descrição das atividades</label>
+          <textarea id="me-desc" rows="3" placeholder="Descreva suas responsabilidades e conquistas…"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancelar" onclick="fecharModal('modal-experiencia')">Cancelar</button>
+        <button class="btn-confirmar" onclick="salvarExperiencia()">Adicionar Experiência</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MODAL: ADICIONAR FORMAÇÃO
+  ═══════════════════════════════════════════ -->
+  <div class="modal-overlay hidden" id="modal-formacao">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>🎓 Adicionar Formação</h3>
+        <button class="modal-close" onclick="fecharModal('modal-formacao')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="campo">
+          <label>Instituição *</label>
+          <input type="text" id="mf-instituicao" placeholder="Ex: USP, FIAP, Alura…"/>
+        </div>
+        <div class="campo">
+          <label>Curso / Grau *</label>
+          <input type="text" id="mf-curso" placeholder="Ex: Bacharelado em Ciência da Computação"/>
+        </div>
+        <div class="form-row">
+          <div class="campo">
+            <label>Início</label>
+            <input type="text" id="mf-inicio" placeholder="2020"/>
+          </div>
+          <div class="campo">
+            <label>Conclusão</label>
+            <input type="text" id="mf-fim" placeholder="2024 (ou 'Em andamento')"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancelar" onclick="fecharModal('modal-formacao')">Cancelar</button>
+        <button class="btn-confirmar" onclick="salvarFormacao()">Adicionar Formação</button>
+      </div>
+    </div>
   </div>
 
 </div>
