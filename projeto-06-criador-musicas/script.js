@@ -1,7 +1,16 @@
 /* MusicGen AI — script.js | Tone.js + Google Gemini */
 
-const GEMINI_KEY = 'AIzaSyAQ.Ab8RN6IUJwvclhq6lsBQoNoV3MXKAwlZAP5dYOzUVqdTVzh3TA';
+// NOTA: Insira aqui sua chave válida do Google AI Studio (https://aistudio.google.com/app/apikey)
+const GEMINI_KEY = 'AQ.Ab8RN6KF3TQBfnlZeAYcK4omM5UFA3-qj57XRvSX03753ScClw';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+
+// ── Timeout helper ─────────────────────────────────────────────
+function fetchComTimeout(url, opcoes, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { ...opcoes, signal: controller.signal })
+    .finally(() => clearTimeout(timer));
+}
 
 // ── Config atual ───────────────────────────────────────────────
 let config = { genero:'lofi', humor:'feliz', bpm:120, oitava:4 };
@@ -48,11 +57,11 @@ function sel(tipo, el, valor) {
 async function gerarNomeIA(genero, humor, bpm) {
   const prompt = `Crie um nome criativo e uma descrição curta (máx 12 palavras) para uma música ${genero} com atmosfera ${humor} a ${bpm} BPM. Responda EXATAMENTE neste formato: NOME | DESCRIÇÃO`;
   try {
-    const res = await fetch(GEMINI_URL, {
+    const res = await fetchComTimeout(GEMINI_URL, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:1,maxOutputTokens:60}})
-    });
+    }, 4000); // timeout de 4 segundos
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const d = await res.json();
     const txt = d.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';

@@ -4,8 +4,17 @@
    ============================================================ */
 
 // ── Configuração da API Gemini ────────────────────────────────────────────
-const GEMINI_KEY = 'AIzaSyAQ.Ab8RN6IUJwvclhq6lsBQoNoV3MXKAwlZAP5dYOzUVqdTVzh3TA';
+// NOTA: Insira aqui sua chave válida do Google AI Studio (https://aistudio.google.com/app/apikey)
+const GEMINI_KEY = 'AQ.Ab8RN6KF3TQBfnlZeAYcK4omM5UFA3-qj57XRvSX03753ScClw';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+
+// ── Timeout helper para fetch ─────────────────────────────────────────────
+function fetchComTimeout(url, opcoes, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { ...opcoes, signal: controller.signal })
+    .finally(() => clearTimeout(timer));
+}
 
 // Modo IA: quando true, usa Gemini para gerar perguntas em vez da árvore
 let modoIA = false;
@@ -36,14 +45,14 @@ ${totalResps > 0 ? `Respostas até agora:\n${historicoTexto}\n` : ''}
 Faça a PRIMEIRA pergunta mais eficiente de sim/não para estreitar as possibilidades.
 Responda APENAS com a pergunta. Sem explicações. Em português.`;
 
-  const res = await fetch(GEMINI_URL, {
+  const res = await fetchComTimeout(GEMINI_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: { temperature: 0.5, maxOutputTokens: 100 }
     })
-  });
+  }, 4000); // timeout de 4 segundos
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
@@ -563,11 +572,14 @@ async function mostrarPerguntaIA() {
     setBotoesResposta(true);
   } catch (err) {
     console.error('Erro Gemini:', err);
-    // Fallback para modo clássico se a IA falhar
-    textoEl.textContent = '⚠️ IA indisponível, usando modo clássico…';
-    setBotoesResposta(true);
+    // Fallback para modo clássico se a IA falhar (timeout ou chave inválida)
+    textoEl.textContent = '⚠️ IA indisponível, iniciando modo clássico…';
+    setBotoesResposta(false);
     setTimeout(() => {
       modoIA = false;
+      noAtual = arvore;
+      historico = [];
+      totalPerguntas = 0;
       mostrarPergunta();
     }, 1500);
   }

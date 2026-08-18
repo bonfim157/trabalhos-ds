@@ -1,7 +1,16 @@
 /* SiteGen AI — script.js (limpo, sem duplicatas) */
 
-const GEMINI_KEY = 'AIzaSyAQ.Ab8RN6IUJwvclhq6lsBQoNoV3MXKAwlZAP5dYOzUVqdTVzh3TA';
+// NOTA: Insira aqui sua chave válida do Google AI Studio (https://aistudio.google.com/app/apikey)
+const GEMINI_KEY = 'AQ.Ab8RN6KF3TQBfnlZeAYcK4omM5UFA3-qj57XRvSX03753ScClw';
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + GEMINI_KEY;
+
+// ── Timeout helper ────────────────────────────────────────────
+function fetchComTimeout(url, opcoes, ms) {
+  var controller = new AbortController();
+  var timer = setTimeout(function() { controller.abort(); }, ms);
+  return fetch(url, Object.assign({}, opcoes, { signal: controller.signal }))
+    .finally(function() { clearTimeout(timer); });
+}
 
 /* ─── ESTADO GLOBAL ────────────────────────────────────────── */
 let avatar      = '👨‍💻';
@@ -147,11 +156,11 @@ function renderSkills() {
 /* ─── GEMINI ───────────────────────────────────────────────── */
 async function chamarGemini(prompt, maxTokens) {
   if (!maxTokens) maxTokens = 150;
-  var res = await fetch(GEMINI_URL, {
+  var res = await fetchComTimeout(GEMINI_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:.8,maxOutputTokens:maxTokens} })
-  });
+  }, 5000); // timeout de 5 segundos
   if (!res.ok) throw new Error('HTTP ' + res.status);
   var data = await res.json();
   var c = data.candidates;
@@ -173,11 +182,12 @@ async function gerarBioIA() {
       mostrarToast('✅ Bio gerada com sucesso!');
       atualizarPreview();
     } else {
-      mostrarToast('⚠️ IA não retornou resposta', 'aviso');
+      throw new Error('Resposta vazia');
     }
   } catch(e) {
-    document.getElementById('f-bio').value = 'Sou ' + nome + ', ' + prof + ' com experiência em ' + sk + '.';
-    mostrarToast('⚠️ Usando bio padrão (API indisponível)', 'aviso');
+    // Fallback local: bio padrão profissional
+    document.getElementById('f-bio').value = 'Sou ' + nome + ', ' + prof + ' apaixonado(a) por inovação e resultados. Com experiência em ' + sk + ', busco sempre entregar soluções de qualidade e impacto.';
+    mostrarToast('⚠️ IA indisponível — bio padrão aplicada', 'aviso');
     atualizarPreview();
   }
   btn.innerHTML = '✨ Gerar Bio com IA'; btn.disabled = false;
@@ -196,8 +206,13 @@ async function gerarTituloIA() {
       input.value = r.replace(/^["']|["']$/g,'');
       mostrarToast('✅ Título melhorado!');
       atualizarPreview();
+    } else {
+      throw new Error('Resposta vazia');
     }
-  } catch(e) { mostrarToast('❌ Erro ao chamar IA', 'erro'); }
+  } catch(e) {
+    // Fallback: manter o título atual sem alteração
+    mostrarToast('⚠️ IA indisponível — título mantido', 'aviso');
+  }
   input.disabled = false;
   if (btnEl) { btnEl.innerHTML = '✨ Melhorar com IA'; btnEl.disabled = false; }
 }
@@ -205,6 +220,16 @@ async function sugerirSkillsIA() {
   var prof = document.getElementById('f-profissao').value.trim() || 'Profissional';
   var btn  = document.querySelector('[onclick="sugerirSkillsIA()"]');
   btn.innerHTML = '<span class="btn-spinner"></span> Sugerindo…'; btn.disabled = true;
+
+  // Skills fallback por área
+  var skillsFallback = {
+    'default':         ['HTML','CSS','JavaScript','Git','Comunicação','Trabalho em equipe','Resolução de problemas','Inglês'],
+    'desenvolvedor':   ['JavaScript','TypeScript','React','Node.js','Git','SQL','APIs REST','Docker'],
+    'designer':        ['Figma','Adobe XD','Photoshop','Illustrator','UI/UX','Prototipagem','Design System','CSS'],
+    'analista':        ['Excel','Power BI','SQL','Python','Análise de dados','Tableau','Estatística','Relatórios'],
+    'gestor':          ['Gestão de projetos','Scrum','Agile','Liderança','Excel','Comunicação','Negociação','OKRs'],
+  };
+
   try {
     var r = await chamarGemini('Liste 8 habilidades essenciais para um ' + prof +
       '. Retorne APENAS os nomes separados por vírgula, sem explicações.', 100);
@@ -216,9 +241,18 @@ async function sugerirSkillsIA() {
       renderSkills(); atualizarPreview();
       mostrarToast('✅ ' + adicionadas + ' skills adicionadas!');
     } else {
-      mostrarToast('⚠️ IA não retornou skills', 'aviso');
+      throw new Error('Resposta vazia');
     }
-  } catch(e) { mostrarToast('❌ Erro ao chamar IA', 'erro'); }
+  } catch(e) {
+    // Fallback local: adicionar skills padrão baseadas no título
+    var profLower = prof.toLowerCase();
+    var chave = Object.keys(skillsFallback).find(function(k) { return profLower.includes(k); }) || 'default';
+    var lista = skillsFallback[chave];
+    var adicionadas = 0;
+    lista.forEach(function(s) { if (!skills.includes(s)) { skills.push(s); adicionadas++; } });
+    renderSkills(); atualizarPreview();
+    mostrarToast('⚠️ IA indisponível — ' + adicionadas + ' skills padrão adicionadas', 'aviso');
+  }
   btn.innerHTML = '✨ Sugerir Skills com IA'; btn.disabled = false;
 }
 async function gerarDescProjetoIA() {
@@ -236,9 +270,14 @@ async function gerarDescProjetoIA() {
       document.getElementById('mp-desc').value = r;
       mostrarToast('✅ Descrição gerada!');
     } else {
-      mostrarToast('⚠️ IA não retornou resposta', 'aviso');
+      throw new Error('Resposta vazia');
     }
-  } catch(e) { mostrarToast('❌ Erro ao chamar IA', 'erro'); }
+  } catch(e) {
+    // Fallback: descrição padrão baseada no nome e tecnologias
+    var descFallback = 'Projeto ' + nome + (tech ? ' desenvolvido com ' + tech : '') + '. Solução criada para demonstrar habilidades técnicas e resolução de problemas reais.';
+    document.getElementById('mp-desc').value = descFallback;
+    mostrarToast('⚠️ IA indisponível — descrição padrão aplicada', 'aviso');
+  }
   btn.innerHTML = '✨ Gerar descrição com IA'; btn.disabled = false;
 }
 

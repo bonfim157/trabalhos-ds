@@ -51,29 +51,38 @@ async function iniciarQuiz() {
   }
 }
 
-/* ── Buscar da Open Trivia DB ─────────────────────── */
+/* ── Buscar da Open Trivia DB (com timeout de 5s) ────── */
 async function buscarPerguntas() {
   let url = 'https://opentdb.com/api.php?amount=10&type=multiple&encode=url3986';
   if (estado.categoria !== 'any') url += `&category=${estado.categoria}`;
   if (estado.dificuldade !== 'any') url += `&difficulty=${estado.dificuldade}`;
 
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const data = await res.json();
-  if (data.response_code !== 0) throw new Error('API code ' + data.response_code);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
 
-  // Formatar perguntas
-  return data.results.map(q => {
-    const correta = decodeURIComponent(q.correct_answer);
-    const incorretas = q.incorrect_answers.map(a => decodeURIComponent(a));
-    const todas = [...incorretas, correta].sort(() => Math.random() - 0.5);
-    return {
-      pergunta: decodeURIComponent(q.question),
-      opcoes: todas,
-      correta: todas.indexOf(correta),
-      dificuldade: q.difficulty
-    };
-  });
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    // response_code 5 = rate limit, outros != 0 = erro
+    if (data.response_code !== 0) throw new Error('API code ' + data.response_code);
+
+    // Formatar perguntas
+    return data.results.map(q => {
+      const correta = decodeURIComponent(q.correct_answer);
+      const incorretas = q.incorrect_answers.map(a => decodeURIComponent(a));
+      const todas = [...incorretas, correta].sort(() => Math.random() - 0.5);
+      return {
+        pergunta: decodeURIComponent(q.question),
+        opcoes: todas,
+        correta: todas.indexOf(correta),
+        dificuldade: q.difficulty
+      };
+    });
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /* ── Banco local de fallback ──────────────────────── */

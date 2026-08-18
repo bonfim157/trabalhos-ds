@@ -34,10 +34,18 @@ const colorPreview = document.getElementById('color-preview');
 const fontSizeEl   = document.getElementById('tamanho-fonte');
 const fontLabel    = document.getElementById('valor-fonte');
 
+// ── Timeout helper ────────────────────────────────────────────
+function fetchComTimeout(url, opcoes, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { ...opcoes, signal: controller.signal })
+    .finally(() => clearTimeout(timer));
+}
+
 // ── Inicialização ─────────────────────────────────────────────
 async function init() {
   try {
-    const res  = await fetch('https://api.imgflip.com/get_memes');
+    const res  = await fetchComTimeout('https://api.imgflip.com/get_memes', {}, 5000);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     if (!data.success) throw new Error('API retornou success=false');
@@ -288,11 +296,11 @@ async function gerarViaAPI() {
     formData.append('text0',       textoCima);
     formData.append('text1',       textoBaixo);
 
-    const res = await fetch('https://api.imgflip.com/caption_image', {
+    const res = await fetchComTimeout('https://api.imgflip.com/caption_image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: formData.toString(),
-    });
+    }, 8000); // timeout de 8 segundos
 
     if (!res.ok) throw new Error('Erro HTTP ' + res.status);
 
@@ -315,14 +323,22 @@ async function gerarViaAPI() {
   } catch (err) {
     let msg = err.message;
     // Traduz erros comuns para mensagens amigáveis
-    if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
-      msg = 'Sem conexão com a internet. Verifique sua rede e tente novamente.';
-    } else if (msg.includes('401') || msg.toLowerCase().includes('login')) {
-      msg = 'Credenciais inválidas. Verifique seu usuário e senha da Imgflip.';
+    if (err.name === 'AbortError' || msg.includes('aborted')) {
+      // Fallback automático para o canvas local
+      mostrarErroAPI('API demorou demais. Use o botão "⬇️ Baixar PNG" para salvar o meme do canvas acima!');
+      console.warn('[caption_image] Timeout — usando canvas local como fallback');
+    } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+      msg = 'Sem conexão com a internet. Use o canvas acima para criar seu meme!';
+      mostrarErroAPI(msg);
+    } else if (msg.includes('401') || msg.toLowerCase().includes('login') || msg.toLowerCase().includes('invalid')) {
+      // Credenciais inválidas — usa o canvas como fallback silencioso
+      mostrarErroAPI('API Imgflip indisponível. Seu meme já está pronto no canvas! Use "⬇️ Baixar PNG" para salvar.');
     } else if (msg.includes('429')) {
       msg = 'Limite de requisições atingido. Aguarde alguns instantes e tente novamente.';
+      mostrarErroAPI('Não foi possível gerar o meme: ' + msg);
+    } else {
+      mostrarErroAPI('Não foi possível gerar o meme: ' + msg);
     }
-    mostrarErroAPI('Não foi possível gerar o meme: ' + msg);
     console.error('[caption_image] Erro:', err);
   } finally {
     btn.disabled = false;
